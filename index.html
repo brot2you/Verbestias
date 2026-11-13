@@ -318,6 +318,10 @@ body{background-color:#FFFDF8;background-image:
 .cb-logo{text-shadow:1px 1px 0 #5E0A15,2px 2px 0 #000}
 .cb-in::before,.cb-in::after{color:var(--oro)}
 .lvlbadge{background:var(--rojo-d)}
+/* en-tête : tout tient sur les petits écrans */
+.gear,.ink{flex:none}
+@media (max-width:440px){.ink .small{display:none}.brand{font-size:24px}}
+@media (max-width:340px){.brand{font-size:20px}.es-tag{display:none}}
 </style>
 </head>
 <body>
@@ -1713,7 +1717,10 @@ var ConjEngine = (function () {
         try {
           var o = JSON.parse(r.result);
           if (!o || typeof o.owned !== "object") throw new Error("format");
-          S = merge(defaults(), o); save(); T = B = L = null; U.view = S.name ? "binder" : "onboard"; render(); toast("Progression importée.");
+          var nb = Object.keys(o.owned).length, qui = o.name ? " de " + esc(o.name) : "";
+          confirmBox("Remplacer ta progression actuelle par la sauvegarde" + qui + " (" + nb + " carte" + (nb > 1 ? "s" : "") + ") ? Ta progression actuelle sera effacée.", "Remplacer", function () {
+            S = merge(defaults(), o); save(); T = B = L = null; U.view = S.name ? "binder" : "onboard"; render(); toast("Progression importée.");
+          });
         } catch (e) { toast("Ce fichier n’est pas une sauvegarde Verbestias."); }
       };
       r.readAsText(t.files[0]);
